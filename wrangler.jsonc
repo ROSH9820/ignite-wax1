@@ -1,0 +1,32 @@
+// Cloudflare Workers configuration for Ignite Wax (Next.js 16 via OpenNext).
+//
+// Local preview:   npm run cf:preview
+// Deploy:          npm run cf:deploy   (requires wrangler login)
+//
+// CI (Workers Builds) auto-detects this file and runs:
+//   npx opennextjs-cloudflare build && npx opennextjs-cloudflare deploy
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ignite-wax1",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-29",
+  "compatibility_flags": [
+    // Node.js APIs used by Next.js internals + our API routes.
+    "nodejs_compat",
+    // Keep global fetch pointed at the public internet (Resend API, etc.).
+    "global_fetch_strictly_public"
+  ],
+  // Static assets (/_next/*, images, fonts) served directly from the edge —
+  // never billed as Worker requests.
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // NOTE: Environment variables (RESEND_API_KEY, ADMIN_PASSWORD,
+  // NEXT_PUBLIC_BUSINESS_WHATSAPP_NUMBER, ...) are intentionally NOT stored
+  // here. Set them in the dashboard (Settings > Variables and Secrets) or via
+  // `wrangler secret put <NAME>` so they never land in git.
+  "observability": {
+    "enabled": true
+  }
+}
